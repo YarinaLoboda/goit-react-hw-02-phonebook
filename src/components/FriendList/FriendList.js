@@ -1,20 +1,26 @@
 import PropTypes from 'prop-types';
 import './FriendList.css';
 
+const FriendItem = ({ isOnline, avatar, name }) => {
+  return (
+    <li className="Item">
+      {isOnline === true ? (
+        <span className="Status-online"> </span>
+      ) : (
+        <span className="Status"> </span>
+      )}
+
+      <img className="Avatar" src={avatar} alt="User avatar" width="48" />
+      <p className="Name">{name}</p>
+    </li>
+  );
+};
+
 function FriendList({ friends }) {
   return (
     <ul className="Friend-list">
       {friends.map(({ id, isOnline, avatar, name }) => (
-        <li key={id} className="Item">
-          {isOnline === true ? (
-            <span className="Status-online"> </span>
-          ) : (
-            <span className="Status"> </span>
-          )}
-
-          <img className="Avatar" src={avatar} alt="User avatar" width="48" />
-          <p className="Name">{name}</p>
-        </li>
+        <FriendItem key={id} isOnline={isOnline} avatar={avatar} name={name} />
       ))}
     </ul>
   );

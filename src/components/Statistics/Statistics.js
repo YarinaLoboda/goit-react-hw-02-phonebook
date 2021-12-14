@@ -2,22 +2,16 @@ import PropTypes from 'prop-types';
 import './Statistics.css';
 
 function Statistics({ title, stats }) {
-  const colorArr = [];
-
-  for (let i = 0; i < stats.length; i++) {
-    colorArr.push(randomColor());
-  }
-
   return (
     <section className="Statistics">
-      {title.length > 0 && <h2 className="Title">{title}</h2>}
+      {title && <h2 className="Title">{title}</h2>}
 
       <ul className="Stat-list">
-        {stats.map((item, index) => (
+        {stats.map(item => (
           <li
             key={item.id}
             className="Item"
-            style={{ backgroundColor: colorArr[index] }}
+            style={{ backgroundColor: randomColor() }}
           >
             <span className="Label">{item.label}</span>
             <span className="Percentage"> {item.percentage}%</span>
