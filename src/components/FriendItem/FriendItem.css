@@ -1,0 +1,32 @@
+.Items {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-bottom: 20px;
+  box-shadow: inset 1px 1px #ccc, 10px 5px 5px #ccc;
+}
+
+.Avatar {
+  margin-right: 20px;
+  margin-left: 10px;
+  border-radius: 50%;
+}
+
+.Name {
+  font-weight: bold;
+  color: rgb(126, 126, 126);
+}
+
+.Status,
+.Status-online {
+  display: inline-block;
+  margin-left: 20px;
+  background-color: #ff0000;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+.Status-online {
+  background-color: #00ff00;
+}
