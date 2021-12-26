@@ -1,39 +1,110 @@
-import { Fragment } from 'react';
-import './App.css';
-import Profile from './components/Profile/Profile';
-import user from './data/user.json';
-import Statistics from './components/Statistics/Statistics';
-import data from './data/data.json';
-import FriendList from './components/FriendList/FriendList';
-import friends from './data/friends.json';
-import TransactionHistory from './components/TransactionHistory/TransactionHistory';
-import transactions from './data/transactions.json';
+import { Component } from 'react';
+import { nanoid } from 'nanoid';
+import styled, { createGlobalStyle } from 'styled-components';
+import toast, { Toaster } from 'react-hot-toast';
+import ContactForm from './components/ContactForm/ContactForm';
+import Filter from './components/Filter/Filter';
+import ContactList from './components/ContactList/ContactList';
 
-export default function App() {
-  return (
-    <Fragment>
-      <div>
-        <Profile
-          username={user.username}
-          tag={user.tag}
-          location={user.location}
-          avatar={user.avatar}
-          stats={user.stats}
-        />
-      </div>
+const Global = createGlobalStyle`
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
 
-      <div>
-        {/* <Statistics stats={data} /> */}
-        <Statistics title="Upload stats" stats={data} />
-      </div>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
 
-      <div>
-        <FriendList friends={friends} />
-      </div>
+h1, h2{ 
+margin: 10px;
+}
+`;
 
-      <div>
-        <TransactionHistory items={transactions} />
-      </div>
-    </Fragment>
-  );
+const PhoneBookContainer = styled.div`
+   {
+    width: 100%;
+  }
+`;
+
+export default class App extends Component {
+  state = {
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
+  };
+
+  updateStateContact = param => {
+    const nameToFind = param.name.toLowerCase();
+
+    const result = this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(nameToFind),
+    );
+
+    if (result.length > 0) {
+      toast.error('This Name is already exists !');
+      return;
+    }
+
+    const newContact = { id: nanoid(5), ...param };
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
+  };
+
+  updateStateFilter = filter => {
+    this.setState({ filter });
+
+    this.getFilteredContacts();
+  };
+
+  getFilteredContacts = () => {
+    const normalizedFilter = this.state.filter.toLowerCase();
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter),
+    );
+  };
+
+  deleteContactById = id => {
+    const { id: idToDel } = id;
+    this.setState(prevState => {
+      return {
+        contacts: prevState.contacts.filter(({ id }) => id !== idToDel),
+      };
+    });
+  };
+
+  render() {
+    const FilteredContacts = this.getFilteredContacts();
+
+    return (
+      <>
+        <Global />
+        <PhoneBookContainer>
+          <Toaster />
+          <h1>Phonebook</h1>
+          <ContactForm onAddContact={this.updateStateContact} />
+          <h2>Contacts</h2>
+
+          {this.state.contacts.length > 0 && (
+            <Filter
+              value={this.state.filter}
+              onChangeFilter={this.updateStateFilter}
+            />
+          )}
+
+          <ContactList
+            contacts={FilteredContacts}
+            onDeleteButtonClick={this.deleteContactById}
+          />
+        </PhoneBookContainer>
+      </>
+    );
+  }
 }
