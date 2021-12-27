@@ -43,11 +43,11 @@ export default class App extends Component {
   updateStateContact = param => {
     const nameToFind = param.name.toLowerCase();
 
-    const result = this.state.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(nameToFind),
+    const result = this.state.contacts.some(
+      contact => contact.name.toLowerCase() === nameToFind,
     );
 
-    if (result.length > 0) {
+    if (result) {
       toast.error('This Name is already exists !');
       return;
     }
